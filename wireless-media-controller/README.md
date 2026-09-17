@@ -1,6 +1,6 @@
 # ESP32 Wireless Media & Telemetry Controller
 
-https://github.com/user-attachments/assets/cf381665-c12d-4418-a7fd-44b33f51b68a
+https://github.com/user-attachments/assets/cd85dc71-f89e-4fba-9879-b017099fb9d5
 
 A complete IoT integration bridging physical hardware and PC media management. This project captures standard infrared (IR) remote signals via an ESP32 and transmits them over a local Wi-Fi network as HTTP POST requests to a custom FastAPI server. The backend executes PC media actions (volume, track control) while persistently logging all events into an SQLite database.
 
