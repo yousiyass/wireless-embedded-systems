@@ -1,11 +1,11 @@
 # ESP32 & FastAPI Industrial Telemetry (Digital Twin Approach)
 
 <p align="center">
-  <img src="/images/test1.jpeg" width="250">
-  <img src="/images/test2.jpeg" width="250">
-  <img src="/images/test3.jpeg" width="250">
-  <img src="/images/test4.jpeg" width="250">
-  <img src="/images/test5.jpeg" width="250">
+  <img src="images/test1.jpeg" width="250">
+  <img src="images/test2.jpeg" width="250">
+  <img src="images/test3.jpeg" width="250">
+  <img src="images/test4.jpeg" width="250">
+  <img src="images/test5.jpeg" width="250">
 </p>
 
 Bu proje, 3 farklı endüstriyel makinenin sıcaklık verilerini ESP32 üzerinden toplayan/simüle eden ve bu verileri **FastAPI** tabanlı bir sunucuya ileten uçtan uca bir IoT telemetri sistemidir. Projede bellek (RAM) optimizasyonuna odaklanılmış ve standart JSON yerine daha düşük veri yüküne sahip "URL-encoded" iletişim protokolü tercih edilmiştir.
