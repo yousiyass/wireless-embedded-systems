@@ -29,7 +29,7 @@ if number_of_records == 0:
 
 @app.post("/machine_update")
 def machine_updating(temp: int=Form(...), machine_id: int=Form(...)):
-    print(f"--> INCOMING DATA: Makine ID = {machine_id} | Sicaklik = {temp}")
+    print(f"--> INCOMING DATA: Makine ID = {machine_id} | Temperature = {temp}")
     if temp >= 20 and temp < 45:
         fan = 1
     elif temp >= 45 and temp < 70:
