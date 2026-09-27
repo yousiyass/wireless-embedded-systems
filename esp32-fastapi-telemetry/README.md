@@ -8,35 +8,41 @@
   <img src="images/test5.jpeg" width="250">
 </p>
 
-Bu proje, 3 farklı endüstriyel makinenin sıcaklık verilerini ESP32 üzerinden toplayan/simüle eden ve bu verileri **FastAPI** tabanlı bir sunucuya ileten uçtan uca bir IoT telemetri sistemidir. Projede bellek (RAM) optimizasyonuna odaklanılmış ve standart JSON yerine daha düşük veri yüküne sahip "URL-encoded" iletişim protokolü tercih edilmiştir.
+This project is an end-to-end IoT telemetry system that collects or simulates temperature data from three different industrial machines via an ESP32 and transmits this data to a FastAPI-based server. The project focuses on memory (RAM) optimization and utilizes a "URL-encoded" communication protocol—which entails a lower data payload—instead of standard JSON.
 
-Veritabanı tarafında "Digital Twin" (Dijital İkiz) mantığı kurularak, veritabanı loglarla şişirilmek yerine sadece 3 makinenin anlık durumları (sıcaklık ve fan seviyesi) `UPDATE` komutlarıyla takip edilmiştir.
+By implementing a "Digital Twin" logic on the database side, the instantaneous states (temperature and fan level) of just three machines were tracked using UPDATE commands, rather than bloating the database with logs.
 
-## 🚀 Öne Çıkan Özellikler (Engineering Highlights)
+🚀 Key Features (Engineering Highlights)
+Low-Overhead HTTP Communication: To keep the ESP32's RAM usage to a minimum, data is sent in the application/x-www-form-urlencoded format (e.g., temp=45&machine_id=1) instead of JSON. The server response is returned as PlainText to eliminate parsing overhead on the client side.
 
-* **Low-Overhead HTTP İletişimi:** ESP32'nin RAM kullanımını minimumda tutmak için veriler JSON yerine `application/x-www-form-urlencoded` (ör: `temp=45&machine_id=1`) formatında gönderilmiştir. Sunucu cevabı da parse etme yükünü ortadan kaldırmak için `PlainText` olarak dönmektedir.
-* **Tek Bağlantı (Stateless) Mimarisi:** ESP32, POST isteğini atıp veriyi sunucuya yazarken, aynı isteğin cevabında (Response) hesaplanan fan hızını geri alır. İkinci bir GET isteğine gerek kalmaz.
-* **Digital Twin Veritabanı:** SQLite üzerinde oluşturulan tek bir tablo (`machines`), 3 makinenin anlık statüsünü tutar. Sistem başlangıcında veritabanı otomatik olarak tohumlanır (seed).
-* **Özel LCD HMI (Human-Machine Interface):** 16x2 I2C LCD ekran üzerinde özel karakterler (Custom Characters) oluşturularak, sunucudan dönen 1, 2 ve 3 seviyeli fan hızları dinamik bir bar grafiğine (`[■][■][ ]`) dönüştürülmüştür.
+Single Connection (Stateless) Architecture: The ESP32 sends a POST request to write data to the server and receives the calculated fan speed in the response of that same request. There is no need for a secondary GET request.
 
-## ⚙️ Sistem Mantığı
+Digital Twin Database: A single table (machines) created on SQLite stores the real-time status of the 3 machines. The database is automatically seeded at system startup.
 
-Sistem her 3 saniyede bir sırayla 3 makinenin sıcaklık değerini sunucuya bildirir:
-1. **Makine 1 (Fiziksel):** ADC pini (Pin 33) üzerinden okunan potansiyometre verisi (20°C - 96°C arasına haritalanır).
-2. **Makine 2 (Sanal):** 45°C - 70°C arası rastgele üretilen simüle sıcaklık.
-3. **Makine 3 (Sanal):** 70°C - 96°C arası rastgele üretilen simüle sıcaklık.
+Custom LCD HMI (Human-Machine Interface): By creating custom characters on a 16x2 I2C LCD screen, the fan speed levels (1, 2, and 3) returned from the server are converted into a dynamic bar graph ([■][■][ ]).
 
-**Sunucu Tarafı Fan Kuralları (FastAPI):**
-* `T < 45°C` ➔ Fan Seviyesi: **1**
-* `T < 70°C` ➔ Fan Seviyesi: **2**
-* `T ≥ 70°C` ➔ Fan Seviyesi: **3**
+⚙️ System Logic
+The system sequentially reports the temperature values of the 3 machines to the server every 3 seconds:
 
-## 📂 Dosya Yapısı
+Machine 1 (Physical): Potentiometer data read via the ADC pin (Pin 33), mapped between 20°C and 96°C.
 
+Machine 2 (Virtual): Simulated temperature randomly generated between 45°C and 70°C.
+
+Machine 3 (Virtual): Simulated temperature randomly generated between 70°C and 96°C.
+
+Server-Side Fan Rules (FastAPI):
+
+T < 45°C ➔ Fan Level: 1
+
+T < 70°C ➔ Fan Level: 2
+
+T ≥ 70°C ➔ Fan Level: 3
+
+📂 File Structure
 ```text
 esp32-fastapi-telemetry/
 │
-├── esp32_iot_client.ino      # ESP32 C++ kaynak kodu (Sensör okuma ve HTTP POST)
-├── fastapi_iot_server.py     # Python FastAPI backend ve SQLite veritabanı yönetimi
-├── dashboard.html            # Anlık makine durumlarını gösteren Jinja2 arayüzü
-└── README.md                 # Proje dokümantasyonu
+├── esp32_iot_client.ino      # ESP32 C++ source code (Sensor reading and HTTP POST)
+├── fastapi_iot_server.py     # Python FastAPI backend and SQLite database management
+├── dashboard.html            # Jinja2 interface displaying real-time machine statuses
+└── README.md                 # Project documentation
