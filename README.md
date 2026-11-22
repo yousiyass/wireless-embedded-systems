@@ -1,3 +1,5 @@
+Note: A consolidated collection of earlier ESP32 projects, restructured and documented for portfolio reference.
+
 # wireless-embedded-systems
 ESP32 and IoT projects featuring wireless communication, web servers, and HTML dashboards.
 
